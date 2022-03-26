@@ -8,9 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="stylesheet" th:href="@{/css/chart/chart.css}" type="text/css">
-    <script th:src="@{/js/chart/highcharts.js}" rel="script"></script>
-    <script th:src="@{/js/chart/exporting.js}" rel="script"></script>
-    <script th:src="@{/js/chart/boost.js}" rel="script"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
 
     <title>Document</title>
 </head>
@@ -85,26 +83,30 @@
 
      // * Request data from the server, add it to the graph and set a timeout to request again
 
+    var i=0;
     async function requestData() {
         let today = new Date();
         let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
         let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         let dateTime = date+' '+time;
 
-        const result = await fetch('/jsonTest');
+        const result = await fetch('/chart2');
         //const result = await fetch('https://demo-live-data.highcharts.com/time-rows.json');
         console.log(" @@@@ await fetch('http://~') result='",result);
 
         if (result.ok) {
-            const data = await result.json();
-            console.log(" @@@@ data.data='"+data.data);
+            const data = await result;
+
+            console.log(" @@@@ data='"+data);
             console.log(" @@@@ fetch dateTime='",dateTime);
 
             //const [date, value] = data[0];
             //const point = [new Date(date).getTime(), value * 10];
             //const [date, value] = data[0];
             //console.log(" @@@@ data[0]='",data[0]);
-            const value = data.data;
+
+            //const value = data.data.join(",");
+            const value = data;
             console.log("@@@@ const value='",value)
 
             //const point = [new Date(today).getTime(), value * 10];
@@ -120,13 +122,17 @@
             // 다르면 갱신 데이터가 있는 것. addPoint 로 데이터 추가.
 
             // add the point // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 포인트 추가
-            //chart.series[0].addPoint(point, true, shift);
-            chart.series.data=data.data;
-            console.log("@@@@ data.data='",data.data)
+            chart.series[0].addPoint(point, true, shift);
+            //chart.series.data=data.data;
+            //console.log("@@@@ data.data='",data.data)
             // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
             // call it again after one second
-            //setTimeout(requestData, 1000); // 매 초 마다
+            i++;
+            console.log("@@@@ value.length ='",value.length)
+            if(i < 10) {
+                setTimeout(requestData, 1000); // 매 초 마다
+            }
         }
         //console.log(" @@@@ data='"+data);
     }

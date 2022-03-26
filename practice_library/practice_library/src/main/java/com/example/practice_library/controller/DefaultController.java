@@ -23,17 +23,17 @@ public class DefaultController {
         return new ModelAndView("/index");
     }
     
-    @GetMapping("/chart")
+    /*@GetMapping("/chart")
     public ModelAndView chartData() {
         ModelAndView mv = new ModelAndView("/chart");
         List<ChartData> all = chartDataService.findAll();
         mv.addObject("list", all);
         return mv;
-    }
+    }*/
     @GetMapping("/chart2")
-    public ModelAndView chartData2() {
+    public ModelAndView chartData() {
         ModelAndView mv = new ModelAndView("/chart2");
-        List<ChartData> all = chartDataService.findAll();
+        List<ChartData> all = chartDataService.findSome();
         mv.addObject("list", all);
         return mv;
     }

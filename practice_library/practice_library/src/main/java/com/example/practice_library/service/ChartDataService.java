@@ -19,7 +19,11 @@ public class ChartDataService {
     public List<ChartData> findAll() {
         return chartDataRepository.findAll();
     }
-    
+
+    public List<ChartData> findSome() {
+        return chartDataRepository.chartDataList2();
+    }
+
     public Map<String, Object> dataJson () {
         Map<String, Object> data = new HashMap<>();
         data.put("data", chartDataRepository.chartDataList());
