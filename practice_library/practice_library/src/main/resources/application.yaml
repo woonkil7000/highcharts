@@ -1,0 +1,42 @@
+server:
+  port: 80
+
+spring:
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    database: ORACLE
+    hibernate:
+      ddl-auto: update
+    properties: # 추가된 부분
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+      show-sql: true
+
+  datasource:
+    url: 'jdbc:oracle:thin:@postech.iptime.org:1521:se'
+    username: 'postech'
+    password: '1234'
+    driver-class-name: 'oracle.jdbc.driver.OracleDriver'
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+    remote:
+      restart:
+        enabled: true
+
+  thymeleaf:
+    enabled: true
+    cache: false
+    encoding: UTF-8
+
+logging: # 추가된 부분
+  level:
+    org.hibernate.SQL: debug    # Logger
+    org.hibernate.type: trace   # Show Query Parameter
+    org.hibernate.type.descriptor.sql: trace

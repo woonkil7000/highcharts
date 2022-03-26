@@ -1,0 +1,171 @@
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" th:href="@{/css/chart/chart.css}" type="text/css">
+    <script th:src="@{/js/chart/highcharts.js}" rel="script"></script>
+    <script th:src="@{/js/chart/exporting.js}" rel="script"></script>
+    <script th:src="@{/js/chart/boost.js}" rel="script"></script>
+
+    <title>Document</title>
+</head>
+<body>
+<!-- 그래프 영역 -->
+<figure class="highcharts-figure">
+    <div id="container"></div>
+    <p class="highcharts-description">
+        Test Chart
+    </p>
+</figure>
+
+
+<script>
+    let container = document.querySelector('#container');
+
+    let chart = (data, type) => {
+        Highcharts.chart('container', {
+            chart: {
+                type: type,
+                zoomType: 'x'
+            },
+
+            title: {
+                text: 'Title Test'
+            },
+
+            credits: {
+                enabled: false
+            },
+
+            subtitle: {
+                text: '임시 테스트'
+            },
+
+            tooltip: {
+                valueDecimals: 2
+            },
+
+            xAxis: {
+                categories: ['데이터량']
+            },
+
+            yAxis: {
+                enabled: false,
+            },
+
+            series: [{
+                data: data,
+                lineWidth: 0.5,
+                name: '동적 데이터 파싱 테스트',
+                className: '클래스네임',
+            }]
+        });
+
+
+    }
+ /*   document.addEventListener('DOMContentLoaded', () => {
+        fetch('jsonTest')
+            .then((res) => {
+                return res.json()
+            })
+            .then((res) => {
+                chart(res.data, 'line')
+            })
+    })*/
+
+ /*   document.addEventListener('DOMContentLoaded', () => {
+        requestData()
+    })*/
+
+
+     // * Request data from the server, add it to the graph and set a timeout to request again
+
+    async function requestData() {
+        let today = new Date();
+        let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        let dateTime = date+' '+time;
+
+        const result = await fetch('/jsonTest');
+        //const result = await fetch('https://demo-live-data.highcharts.com/time-rows.json');
+        console.log(" @@@@ await fetch('http://~') result='",result);
+
+        if (result.ok) {
+            const data = await result.json();
+            console.log(" @@@@ data.data='"+data.data);
+            console.log(" @@@@ fetch dateTime='",dateTime);
+
+            //const [date, value] = data[0];
+            //const point = [new Date(date).getTime(), value * 10];
+            //const [date, value] = data[0];
+            //console.log(" @@@@ data[0]='",data[0]);
+            const value = data.data;
+            console.log("@@@@ const value='",value)
+
+            //const point = [new Date(today).getTime(), value * 10];
+            const point = [new Date(today).getTime(), value];
+            console.log("@@@@ const point='",point)
+
+            const series = chart.series[0], shift = series.data.length > 20; // shift if the series is longer than 20
+            console.log("@@@@ const series='",series)
+
+            // @@@@@@@@@  최신 데이터 1건을 1초 마다 거져와서 차트에 추가 .addPoint @@@@@@@@
+            // 마지막 입력된 PID의 값과 비교
+            // 같으면 갱신 데이터 없는 것. 추가 하지 않는다.
+            // 다르면 갱신 데이터가 있는 것. addPoint 로 데이터 추가.
+
+            // add the point // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 포인트 추가
+            //chart.series[0].addPoint(point, true, shift);
+            chart.series.data=data.data;
+            console.log("@@@@ data.data='",data.data)
+            // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+            // call it again after one second
+            //setTimeout(requestData, 1000); // 매 초 마다
+        }
+        //console.log(" @@@@ data='"+data);
+    }
+
+    // 리스너
+    window.addEventListener('load', function () {
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container',
+                defaultSeriesType: 'spline',
+                events: {
+                    load: requestData
+                }
+            },
+            title: {
+                text: 'Live random data'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150,
+                maxZoom: 20 * 1000
+            },
+            yAxis: {
+                minPadding: 0.2,
+                maxPadding: 0.2,
+                title: {
+                    text: 'Value',
+                    margin: 80
+                }
+            },
+            series: [{
+                name: 'Random data',
+                data: []
+
+            }]
+        });
+    });
+
+
+</script>
+</body>
+</html>
