@@ -26,12 +26,16 @@
 
 
 <script>
-let chart; // global
 
+let chart; // global
 /**
  * Request data from the server, add it to the graph and set a timeout to request again
  */
-var i=0;
+//var i=0;
+var point;
+let datas=[];
+let pids=[];
+let chartDatas=[];
 async function requestData() {
     //const result = await fetch('https://demo-live-data.highcharts.com/time-rows.json'); // api data
     const result = await fetch('/apiChartData'); // get api data
@@ -39,35 +43,71 @@ async function requestData() {
         //const data = await result.json();
         const data = await result.json();
         console.log("data="+JSON.stringify(data));
+        console.log("data.data="+JSON.stringify(data.data));
+        //console.log("data.data['data']="+JSON.stringify(data.data['data']));
+
+        data.data.forEach((data)=>{
+            datas.push(data.data);
+            pids.push(data.pid);
+            chartDatas[0].push(data.pid);
+            chartDatas[1].push(data.data);
+        });
+        console.log("datas[]='"+datas);
+        console.log("pids[]='"+pids);
+        console.log("chartDatas[]='"+chartDatas);
+        console.log("length="+datas.length+","+pids.length);
+        /*let strDatas = datas.join(",");
+        let strPids = pids.join(",");
+        console.log("strDatas='"+strDatas);
+        console.log("strPids[]='"+strPids);
+        */
 
         // console.log("data.data="+data.data);
 
         // //const [date, value] = data.data;
         // const [pid, data1] = data.data;
+        /*
         const value = data.data[i]; // 첫번째 데이터 {pid, data}
         console.log("value="+JSON.stringify(value));
         console.log("value['pid']="+JSON.stringify(value['pid']));
         console.log("value['data']="+JSON.stringify(value['data']));
         //const point = [Date.now(), value['data'] * 10];
-        const point = [Date.now(), value['data']];
-        console.log("point="+JSON.stringify(point));
+        */
 
-        const series = chart.series[0],
+        /*const point = [Date.now(), value['data']];
+        console.log("point="+JSON.stringify(point));
+        */
+        /*const series = chart.series[0],
             shift = series.data.length > 100; // shift if the series is longer than 20
         console.log("series="+series);
         // add the point
-        chart.series[0].addPoint(point, true, shift);
-        // call it again after one second
+        chart.series[0].addPoint(point, true, shift);*/
 
-        i++;
-        console.log("@@ i="+i);
-        if(i>=data.data.length){return false}
-        setTimeout(requestData, 1); // 1000: 매 1초마다 요청
+        // call it again after one second
+        //--------------------------------------------------------
+
+        //--------------------------------------------------------
+        //i++;
+        //console.log("@@ i="+i);
+        //if(i>=data.data.length){return false}
+        //setTimeout(requestData, 1); // 1000: 매 1초마다 요청
     }
 }
 
 window.addEventListener('load', function () {
-    chart = new Highcharts.Chart({
+    requestData();
+    var pointInterval=Date.now();
+    var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'container'
+        },
+        series: [{
+            data: [chartDatas],
+    pointStart: 0,
+        pointInterval
+}]
+});
+    /*chart = new Highcharts.Chart({
         chart: {
             renderTo: 'container',
             defaultSeriesType: 'spline',
@@ -95,7 +135,8 @@ window.addEventListener('load', function () {
             name: 'Random data',
             data: []
         }]
-    });
+    });*/
+
 });
 
 
