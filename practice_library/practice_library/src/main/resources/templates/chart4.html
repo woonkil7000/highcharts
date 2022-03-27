@@ -43,20 +43,44 @@ let coupleData=[];
 let chartDatas=[];
 let strDatas;
 let strPids;
+
+
 let exampleData1 = [1222,73,1223,94,1224,10,1225,95,1226,98,1227,47,1228];
 console.log(typeof exampleData1);
 
 exampleData1=exampleData1.toString();
 console.log("toString exampleData1="+exampleData1.toString());
+console.log("toString "+typeof exampleData1);
+
 exampleData1=exampleData1.split(",");
 console.log("splited exampleData1="+exampleData1);
+console.log("split "+typeof exampleData1);
+
+exampleData1 = "["+exampleData1+"]";
+console.log("'[' ']'"+typeof exampleData1);
+
+exampleData1=exampleData1.split(",");
+console.log("split "+typeof exampleData1);
+
+
 
 let exampleData2 = [73,1223,94,1224,10,1225,95,1226,98,1227,47,1228,500];
 console.log(typeof exampleData2);
+
 exampleData2=exampleData2.toString();
 console.log("toString exampleData2="+exampleData2.toString());
+console.log("toString "+typeof exampleData2);
+
 exampleData2=exampleData2.split(",");
 console.log("splited exampleData2="+exampleData2);
+console.log("split "+typeof exampleData2);
+
+exampleData2 = "["+exampleData2+"]";
+console.log("'[' ']'"+typeof exampleData2);
+
+exampleData2=exampleData2.split(",");
+console.log("split "+typeof exampleData2);
+
 
 async function requestData() {
     //const result = await fetch('https://demo-live-data.highcharts.com/time-rows.json'); // api data
