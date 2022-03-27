@@ -22,13 +22,13 @@ spring:
     driver-class-name: 'oracle.jdbc.driver.OracleDriver'
 
   devtools:
-    livereload:
-      enabled: true
-    restart:
-      enabled: true
-    remote:
-      restart:
-        enabled: true
+#    livereload:
+#      enabled: true
+#    restart:
+#      enabled: true
+#    remote:
+#      restart:
+#        enabled: true
 
   thymeleaf:
     enabled: true

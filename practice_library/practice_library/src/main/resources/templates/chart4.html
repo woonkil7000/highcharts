@@ -11,6 +11,10 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/boost.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <title>Document</title>
 </head>
@@ -35,8 +39,25 @@ let chart; // global
 var point;
 let datas=[];
 let pids=[];
-let chartDatas=[];
 let coupleData=[];
+let chartDatas=[];
+let strDatas;
+let strPids;
+let exampleData1 = [1222,73,1223,94,1224,10,1225,95,1226,98,1227,47,1228];
+console.log(typeof exampleData1);
+
+exampleData1=exampleData1.toString();
+console.log("toString exampleData1="+exampleData1.toString());
+exampleData1=exampleData1.split(",");
+console.log("splited exampleData1="+exampleData1);
+
+let exampleData2 = [73,1223,94,1224,10,1225,95,1226,98,1227,47,1228,500];
+console.log(typeof exampleData2);
+exampleData2=exampleData2.toString();
+console.log("toString exampleData2="+exampleData2.toString());
+exampleData2=exampleData2.split(",");
+console.log("splited exampleData2="+exampleData2);
+
 async function requestData() {
     //const result = await fetch('https://demo-live-data.highcharts.com/time-rows.json'); // api data
     const result = await fetch('/apiChartData'); // get api data
@@ -59,11 +80,22 @@ async function requestData() {
         });
         console.log("datas[]='"+datas);
         console.log("pids[]='"+pids);
+        strDatas="["+datas+"]";
+        strPids="["+pids+"]";
+        console.log("strDatas="+strDatas);
+        console.log("strPids="+strPids);
+        var $datas=datas;
+        var $pids=pids;
+        console.log("$datas="+$datas);
+        console.log("$pids="+$pids);
+
         console.log("coupleData[]='"+coupleData);
         console.log("coupleData[0]='"+coupleData[0]);// coupleData[0]='1222,73'
 
         console.log("coupleData[0][0]='"+coupleData[0][0]);// coupleData[0][0]='1222'
         console.log("coupleData[0][1]='"+coupleData[0][1]);// coupleData[0][1]='73'
+        //coupleData=coupleData.join(",");
+        chartDatas = coupleData;
         console.log("chartDatas[]='"+chartDatas);
 
         console.log("length="+datas.length+","+pids.length);
@@ -88,11 +120,21 @@ async function requestData() {
         /*const point = [Date.now(), value['data']];
         console.log("point="+JSON.stringify(point));
         */
-        /*const series = chart.series[0],
+        const point = [Date.now(), datas[0]]; // point=[1648392208949,73]
+        //const point = [pids, datas];
+        console.log("point="+JSON.stringify(point));
+
+        /*
+        const series = chart.series[0],
             shift = series.data.length > 100; // shift if the series is longer than 20
         console.log("series="+series);
         // add the point
-        chart.series[0].addPoint(point, true, shift);*/
+        chart.series[0].addPoint(point, true, shift);
+        */
+        //const series = chart.series[0], shift = series.data.length > 100; // shift if the series is longer than 20
+        //console.log("series="+series);
+        // add the point
+        //chart.series[0].addPoint(point, true, shift);
 
         // call it again after one second
         //--------------------------------------------------------
@@ -105,18 +147,29 @@ async function requestData() {
     }
 }
 
+// datas="["+datas+"]";
+// pids="["+pids+"]";
+// console.log("[datas]="+datas);
+// console.log("[pids]="+pids);
 window.addEventListener('load', function () {
     requestData();
+
     var pointInterval=Date.now();
     var chart = new Highcharts.Chart({
         chart: {
             renderTo: 'container'
         },
         series: [{
-            data: [chartDatas],
-    pointStart: 0,
-        pointInterval
-}]
+            name: 'installation',
+            //data: [1222,73,1223,94,1224,10,1225,95,1226,98,1227,47,1228]
+            data: exampleData1
+            //data: strDatas.toString()
+        },{
+            name: 'Manufacturing',
+            //data: [73,1223,94,1224,10,1225,95,1226,98,1227,47,1228,1222]
+            data: exampleData2
+            //data: strPids.toString()
+        }],
 });
     /*chart = new Highcharts.Chart({
         chart: {
