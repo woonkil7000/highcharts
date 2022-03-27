@@ -9,10 +9,13 @@
 
     <link rel="stylesheet" th:href="@{/css/chart/chart.css}" type="text/css">
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/boost.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
     <title>Document</title>
 </head>
 <body>
+<h2>그래프</h2>
 <!-- 그래프 영역 -->
 <figure class="highcharts-figure">
     <div id="container"></div>
@@ -83,22 +86,32 @@
 
      // * Request data from the server, add it to the graph and set a timeout to request again
 
-    var i=0;
+
+    let i=0;
     async function requestData() {
+        console.log("function requestData()");
         let today = new Date();
         let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
         let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         let dateTime = date+' '+time;
 
-        const result = await fetch('/chart2');
+        //const result = await fetch('/chartDataList');
+        const result = await fetch('/apiChartData'); // get api data
         //const result = await fetch('https://demo-live-data.highcharts.com/time-rows.json');
+
         console.log(" @@@@ await fetch('http://~') result='",result);
 
         if (result.ok) {
-            const data = await result;
+            const data = await result.json();
 
-            console.log(" @@@@ data='"+data);
+            console.log(" @@@@ i , data='"+i+","+data);
+            console.log(" @@@@ JSON.stringify(data)='"+JSON.stringify(data));
+            console.log(" @@@@ data.data[0].pid='"+data.data[i].pid);
+            console.log(" @@@@ data.data[0].data='"+data.data[i].data);
+            console.log(" @@@@ data.data.length='"+data.data.length);
+
             console.log(" @@@@ fetch dateTime='",dateTime);
+            //return false;
 
             //const [date, value] = data[0];
             //const point = [new Date(date).getTime(), value * 10];
@@ -106,14 +119,15 @@
             //console.log(" @@@@ data[0]='",data[0]);
 
             //const value = data.data.join(",");
-            const value = data;
-            console.log("@@@@ const value='",value)
+            const value = data.data[i].data;
+            const date = Date.now();
+            console.log("@@@@ const date,value = '",date+","+value);
 
             //const point = [new Date(today).getTime(), value * 10];
-            const point = [new Date(today).getTime(), value];
+            const point = [date, value];
             console.log("@@@@ const point='",point)
 
-            const series = chart.series[0], shift = series.data.length > 20; // shift if the series is longer than 20
+            const series = chart.series[0], shift = series.data.length > 30; // shift if the series is longer than 20
             console.log("@@@@ const series='",series)
 
             // @@@@@@@@@  최신 데이터 1건을 1초 마다 거져와서 차트에 추가 .addPoint @@@@@@@@
@@ -129,10 +143,12 @@
 
             // call it again after one second
             i++;
-            console.log("@@@@ value.length ='",value.length)
-            if(i < 10) {
-                setTimeout(requestData, 1000); // 매 초 마다
+            if(i >= data.data.length){
+                console.log("@@@@@ end @@@@@ i="+i);
+                return false
             }
+            setTimeout(requestData, 100); // 매 초 마다
+
         }
         //console.log(" @@@@ data='"+data);
     }

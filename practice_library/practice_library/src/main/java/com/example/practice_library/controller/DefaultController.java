@@ -1,8 +1,11 @@
 package com.example.practice_library.controller;
 
+import com.example.practice_library.dto.CMRespDto;
 import com.example.practice_library.model.ChartData;
 import com.example.practice_library.service.ChartDataService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,12 +20,7 @@ import java.util.Map;
 public class DefaultController {
     
     private final ChartDataService chartDataService;
-    
-    @GetMapping("/")
-    public ModelAndView index() {
-        return new ModelAndView("/index");
-    }
-    
+
     /*@GetMapping("/chart")
     public ModelAndView chartData() {
         ModelAndView mv = new ModelAndView("/chart");
@@ -30,12 +28,11 @@ public class DefaultController {
         mv.addObject("list", all);
         return mv;
     }*/
-    @GetMapping("/chart2")
-    public ModelAndView chartData() {
-        ModelAndView mv = new ModelAndView("/chart2");
-        List<ChartData> all = chartDataService.findSome();
-        mv.addObject("list", all);
-        return mv;
+
+    @GetMapping("/apiChartData")
+    public ResponseEntity<?> apiChartData() {
+        List<ChartData> some = chartDataService.findSome();
+        return new ResponseEntity<>(new CMRespDto<>(1, "List ChartData 담기 성공", some), HttpStatus.OK);
     }
     
     @GetMapping("/jsonTest")
