@@ -36,6 +36,7 @@ var point;
 let datas=[];
 let pids=[];
 let chartDatas=[];
+let coupleData=[];
 async function requestData() {
     //const result = await fetch('https://demo-live-data.highcharts.com/time-rows.json'); // api data
     const result = await fetch('/apiChartData'); // get api data
@@ -44,17 +45,27 @@ async function requestData() {
         const data = await result.json();
         console.log("data="+JSON.stringify(data));
         console.log("data.data="+JSON.stringify(data.data));
+        console.log("data.data[0]="+JSON.stringify(data.data[0]));
         //console.log("data.data['data']="+JSON.stringify(data.data['data']));
 
         data.data.forEach((data)=>{
+            var cplChart=[];
             datas.push(data.data);
             pids.push(data.pid);
-            chartDatas[0].push(data.pid);
-            chartDatas[1].push(data.data);
+            cplChart.push(data.pid); // cplChart 1: pid
+            cplChart.push(data.data); // cplChart 2: data
+            //console.log("forEach inner cplChart[]='"+cplChart);
+            coupleData.push(cplChart); // cplChart 의 한쌍
         });
         console.log("datas[]='"+datas);
         console.log("pids[]='"+pids);
+        console.log("coupleData[]='"+coupleData);
+        console.log("coupleData[0]='"+coupleData[0]);// coupleData[0]='1222,73'
+
+        console.log("coupleData[0][0]='"+coupleData[0][0]);// coupleData[0][0]='1222'
+        console.log("coupleData[0][1]='"+coupleData[0][1]);// coupleData[0][1]='73'
         console.log("chartDatas[]='"+chartDatas);
+
         console.log("length="+datas.length+","+pids.length);
         /*let strDatas = datas.join(",");
         let strPids = pids.join(",");
